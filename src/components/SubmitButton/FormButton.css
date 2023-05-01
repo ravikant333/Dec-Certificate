@@ -1,0 +1,5 @@
+.formButton{
+    display: flex;
+    cursor: pointer;
+    margin: auto;
+}
