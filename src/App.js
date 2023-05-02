@@ -11,10 +11,10 @@ function App() {
        <LoginWithMetamask/>
     <div>
     {/* <RegisterTeacher/> */}
-    <RegisterStudent/>
+    {/* <RegisterStudent/> */}
    
     {/* <IssueCertificate/> */}
-    {/* <VerifyCertificate/> */}
+    <VerifyCertificate/>
     </div>
     </BlockchainConnector>
   );

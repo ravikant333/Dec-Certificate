@@ -11,10 +11,11 @@ const BlockchainConnector = ({ children }) => {
     if (typeof window.ethereum !== "undefined") {
       const web3 = new Web3(window.ethereum);
        contractInstance = new web3.eth.Contract(abi, ContractAddress);
+      //  console.log("instance",contractInstance)
     } else {
       alert("Please Install Metamask");
     }
-  return <Provider value={contractInstance}>{children}</Provider>;
+  return <Provider value={{contractInstance}}>{children}</Provider>;
 };
 
 export default BlockchainConnector;

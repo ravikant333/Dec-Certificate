@@ -15,9 +15,10 @@ export const initialStudentState = {
 
 export const initialCertificateState = {
   image: "",
+  certificateNo: "",
   issuedTo: "",
-  issuedBy:"",
-  issueDate:"",
+  issuedBy: "",
+  issueDate: "",
   description: "",
   validity: "",
 };

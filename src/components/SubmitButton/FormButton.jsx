@@ -1,4 +1,4 @@
-import './FormButton.css'
+import "./FormButton.css";
 const FormButton = ({ onClick, children }) => {
   return (
     <button className="formButton" onClick={onClick}>

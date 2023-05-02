@@ -1,13 +1,13 @@
-.registerTeacherContainer{
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    align-items: center;
-    margin: 20px auto;
+.registerTeacherContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  margin: 20px auto;
 }
-.inputContainer{
-    display: flex;
-    flex-direction: column;
-    width: 40%;
-    gap: 15px;
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  gap: 15px;
 }

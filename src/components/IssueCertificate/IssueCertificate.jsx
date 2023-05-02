@@ -1,10 +1,13 @@
 import { useState } from "react";
-import './IssueCertificate.css'
+import "./IssueCertificate.css";
 import { initialCertificateState } from "../../constants/states";
-import { NFTStorage} from "nft.storage";
+import { NFTStorage } from "nft.storage";
 import IpfsStorage from "./IpfsStorage";
 import Input from "../Input/Input";
 import FormButton from "../SubmitButton/FormButton";
+import { getUserAccount } from "../../utils/createEthAccount";
+import { BlockchainContext } from "../../context/BlockchainConnecter";
+import { useContext } from "react";
 
 const NFT_STORAGE_TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDk0N2YyNzRhNTU5OWI4MGM0QjNGMTFlMjI0NTZjNzVkMkE4ZjY3NjUiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY4MjgzNTg5MzY0MSwibmFtZSI6ImRlYy1jZXJ0aWZpY2F0ZSJ9.dD8rlQnIGpv1bcGBPx6bVheit_hFFuLni8__kIwgI_k";
@@ -12,13 +15,21 @@ const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
 
 const IssueCertificate = () => {
   const [certificate, setCertificate] = useState(initialCertificateState);
+  const { contractInstance } = useContext(BlockchainContext);
 
-  const issueCertificate = async() => {
-    setCertificate({...certificate,issuedBy:'ravikant mishra'})
-    certificate.name="Certificate"
-    certificate.description="for the best"
-    const metadata=await client.store(certificate)
-    console.log("metaData",metadata)
+  const issueCertificate = async () => {
+    const userAccount = await getUserAccount();
+    setCertificate({ ...certificate, issuedBy: userAccount });
+    certificate.name = "Certificate";
+    const metadata = await client.store(certificate);
+    console.log("metaData", metadata);
+    await contractInstance.methods
+      .issueCertificate(
+        certificate.issuedTo,
+        metadata.url,
+        certificate.certificateNo
+      )
+      .send({ from: userAccount });
   };
 
   const handleInputChange = (e) => {
@@ -34,28 +45,46 @@ const IssueCertificate = () => {
   return (
     <section className="issueCertificateContainer">
       <h1>Issue Certificate</h1>
-    <div className="inputContainer">
-      <IpfsStorage certificate={certificate} setCertficate={setCertificate} />
-      <Input
-        placeholder="Issued To"
-        name="issuedTo"
-        onChange={handleInputChange}
-        value={certificate.issuedTo}
-      />
-      <Input
-        placeholder="Category"
-        name="category"
-        onChange={handleInputChange}
-        value={certificate.category}
-      />
-      <Input
-        placeholder="Validity"
-        name="validity"
-        onChange={handleInputChange}
-        value={certificate.validity}
-      />
-      <FormButton onClick={issueCertificate}>Submit</FormButton>
-    </div>
+      <div className="inputContainer">
+        <IpfsStorage certificate={certificate} setCertficate={setCertificate} />
+        <Input
+          placeholder="Certificate Number"
+          name="certificateNo"
+          onChange={handleInputChange}
+          value={certificate.certificateNo}
+        />
+        <Input
+          placeholder="Issued To"
+          name="issuedTo"
+          onChange={handleInputChange}
+          value={certificate.issuedTo}
+        />
+        <Input
+          placeholder="Issue Date"
+          name="issueDate"
+          onChange={handleInputChange}
+          value={certificate.issueDate}
+        />
+        <Input
+          placeholder="Category"
+          name="category"
+          onChange={handleInputChange}
+          value={certificate.category}
+        />
+        <Input
+          placeholder="Validity"
+          name="validity"
+          onChange={handleInputChange}
+          value={certificate.validity}
+        />
+        <Input
+          placeholder="Discription"
+          name="description"
+          onChange={handleInputChange}
+          value={certificate.description}
+        />
+        <FormButton onClick={issueCertificate}>Submit</FormButton>
+      </div>
     </section>
   );
 };
