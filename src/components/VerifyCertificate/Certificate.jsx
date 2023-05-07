@@ -1,15 +1,14 @@
 import "./Certificate.css";
 
-const Certificate = ({data}) => {
-  
-    const { certificateNo,
-        issuedTo,
-        issuedBy,
-        issueDate,
-        description,
-        validity,
-        category,
-        image}=data;
+const Certificate = ({ data }) => {
+
+  const { certificateNo,
+    issuedTo,
+    issuedBy,
+    issueDate,
+    description,
+    validity,
+    image } = data;
   const cid = image?.substring(7);
   return (
     <div className="certificateContainer">

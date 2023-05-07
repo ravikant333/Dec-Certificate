@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./IssueCertificate.css";
 import { initialCertificateState } from "../../constants/states";
 import { NFTStorage } from "nft.storage";
@@ -15,12 +15,24 @@ const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
 
 const IssueCertificate = () => {
   const [certificate, setCertificate] = useState(initialCertificateState);
+  const [userAccount, setUserAccount] = useState(null)
   const { contractInstance } = useContext(BlockchainContext);
 
-  const issueCertificate = async () => {
+
+  const getAccount = async () => {
     const userAccount = await getUserAccount();
-    setCertificate({ ...certificate, issuedBy: userAccount });
+    setUserAccount(userAccount);
+  }
+
+  useEffect(() => {
+    getAccount()
+  })
+
+  const issueCertificate = async () => {
+    console.log('uj', userAccount)
+    certificate.issuedBy = userAccount
     certificate.name = "Certificate";
+
     const metadata = await client.store(certificate);
     console.log("metaData", metadata);
     await contractInstance.methods
@@ -30,6 +42,8 @@ const IssueCertificate = () => {
         certificate.certificateNo
       )
       .send({ from: userAccount });
+
+    alert("Certificate Issued")
   };
 
   const handleInputChange = (e) => {
@@ -64,12 +78,6 @@ const IssueCertificate = () => {
           name="issueDate"
           onChange={handleInputChange}
           value={certificate.issueDate}
-        />
-        <Input
-          placeholder="Category"
-          name="category"
-          onChange={handleInputChange}
-          value={certificate.category}
         />
         <Input
           placeholder="Validity"
